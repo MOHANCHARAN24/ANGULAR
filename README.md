@@ -6,7 +6,7 @@ ServiceHub is a full-stack task management application designed to help users tr
 
 ## 🚀 Live Demo & Links
 
-* **Frontend App:** [https://angular-six-mocha.vercel.app](https://angular-six-mocha.vercel.app)
+* **Frontend App:** [https://angular-3-n9hk.onrender.com)
 * **Backend API:** Hosted on Render
 * **Repository:** [MOHANCHARAN24/ANGULAR](https://github.com/MOHANCHARAN24/ANGULAR)
 
