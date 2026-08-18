@@ -2,8 +2,9 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
-RUN dotnet restore "ServiceHub.csproj"
-RUN dotnet publish "ServiceHub.csproj" -c Release -o /app/out
+WORKDIR /src/ServiceHub.API
+RUN dotnet restore "ServiceHub.API.csproj"
+RUN dotnet publish "ServiceHub.API.csproj" -c Release -o /app/out
 
 # Run Stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
@@ -11,4 +12,4 @@ WORKDIR /app
 COPY --from=build /app/out .
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
-ENTRYPOINT ["dotnet", "ServiceHub.dll"]
+ENTRYPOINT ["dotnet", "ServiceHub.API.dll"]
