@@ -1,0 +1,145 @@
+<main class="app-shell">
+  <header class="hero">
+    <p class="kicker">ServiceHub</p>
+    <h1>Task Management</h1>
+    <p class="subtitle">A simple Angular + .NET task board for daily planning.</p>
+  </header>
+
+  <section class="stats">
+    <article>
+      <h2>{{ tasks.length }}</h2>
+      <p>Total</p>
+    </article>
+    <article>
+      <h2>{{ pendingCount }}</h2>
+      <p>Pending</p>
+    </article>
+    <article>
+      <h2>{{ completedCount }}</h2>
+      <p>Completed</p>
+    </article>
+  </section>
+
+  <section class="panel form-panel">
+    <h3>Add Task</h3>
+    <form (ngSubmit)="addTask()">
+      <label>
+        Title
+        <input
+          type="text"
+          name="title"
+          [(ngModel)]="newTask.title"
+          placeholder="Prepare sprint notes"
+          required
+        />
+      </label>
+
+      <label>
+        Description
+        <textarea
+          name="description"
+          [(ngModel)]="newTask.description"
+          placeholder="Optional details"
+          rows="3"
+        ></textarea>
+      </label>
+
+      <div class="row-fields">
+        <label>
+          Due date
+          <input type="date" name="dueDate" [(ngModel)]="newTask.dueDate" />
+        </label>
+
+        <label>
+          Priority
+          <select name="priority" [(ngModel)]="newTask.priority">
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+        </label>
+      </div>
+
+      <button type="submit">Create task</button>
+    </form>
+  </section>
+
+  @if (errorMessage) {
+    <p class="error-banner">{{ errorMessage }}</p>
+  }
+
+  <section class="panel list-panel">
+    <div class="list-head">
+      <h3>Your Tasks</h3>
+      <button type="button" class="ghost" (click)="loadTasks()">Refresh</button>
+    </div>
+
+    @if (loading) {
+      <p class="state-text">Loading tasks...</p>
+    } @else if (tasks.length === 0) {
+      <p class="state-text">No tasks yet. Add your first one above.</p>
+    } @else {
+      <div class="task-list">
+        @for (task of tasks; track task.id) {
+          <article class="task-card" [class.done]="task.isCompleted">
+            @if (editingTaskId !== task.id) {
+              <div class="task-main">
+                <h4>{{ task.title }}</h4>
+                @if (task.description) {
+                  <p>{{ task.description }}</p>
+                }
+                <small>
+                  Priority: {{ task.priority }}
+                  @if (task.dueDate) {
+                    | Due: {{ task.dueDate | date: 'mediumDate' }}
+                  }
+                </small>
+              </div>
+
+              <div class="task-actions">
+                <button type="button" class="ghost" (click)="toggleTask(task.id)">
+                  {{ task.isCompleted ? 'Mark pending' : 'Mark done' }}
+                </button>
+                <button type="button" class="ghost" (click)="beginEdit(task)">Edit</button>
+                <button type="button" class="danger" (click)="deleteTask(task.id)">Delete</button>
+              </div>
+            } @else {
+              <div class="edit-form">
+                <label>
+                  Title
+                  <input type="text" [(ngModel)]="editTask.title" name="editTitle" required />
+                </label>
+                <label>
+                  Description
+                  <textarea
+                    [(ngModel)]="editTask.description"
+                    name="editDescription"
+                    rows="3"
+                  ></textarea>
+                </label>
+                <div class="row-fields">
+                  <label>
+                    Due date
+                    <input type="date" [(ngModel)]="editTask.dueDate" name="editDueDate" />
+                  </label>
+                  <label>
+                    Priority
+                    <select [(ngModel)]="editTask.priority" name="editPriority">
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="task-actions">
+                  <button type="button" (click)="saveEdit(task.id)">Save</button>
+                  <button type="button" class="ghost" (click)="cancelEdit()">Cancel</button>
+                </div>
+              </div>
+            }
+          </article>
+        }
+      </div>
+    }
+  </section>
+</main>
