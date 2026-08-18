@@ -1,2 +1,0 @@
-# This file tells Replit how to run the .NET Web API project
-run = "dotnet run"
